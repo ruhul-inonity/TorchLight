@@ -18,6 +18,7 @@ public class DriverActivity extends Activity {
     private Camera camera;
     private boolean isFlashOn;
     private boolean hasFlash;
+    private int firstTime = 1;
     Camera.Parameters params;
     //MediaPlayer mp;
 
@@ -48,17 +49,19 @@ public class DriverActivity extends Activity {
 
         }
 
-        //get camera access
-        getCamera();
-
-        //display button image
-        toggleButtonImage();
 
         //switch button click event to toggle flash on/off
         btnTorchSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isFlashOn){
+                if ( firstTime == 1){
+                    //get camera access
+                    getCamera();
+                    firstTime = 0;
+                    //display button image
+                    toggleButtonImage();
+                }
+                 if(isFlashOn){
                     turnOffFlash();
                 }else {
                     turnOnFlash();
@@ -90,7 +93,7 @@ public class DriverActivity extends Activity {
 
     private void turnOffFlash() {
         if (isFlashOn) {
-            if (camera == null || params == null) {
+            if (camera == null ) {
                 return;
             }
             params = camera.getParameters();
@@ -106,7 +109,11 @@ public class DriverActivity extends Activity {
 
 
     private void toggleButtonImage() {
-        if(isFlashOn){
+        /*if (firstTimeScreen == 1 && isFlashOn){
+            btnTorchSwitch.setImageResource(R.drawable.btn_switch_off);
+            firstTimeScreen = 0;
+        }*/
+         if(isFlashOn){
             btnTorchSwitch.setImageResource(R.drawable.btn_switch_on);
         }else {
             btnTorchSwitch.setImageResource(R.drawable.btn_switch_off);
@@ -121,6 +128,10 @@ public class DriverActivity extends Activity {
             try{
                 camera = Camera.open();
                 params = camera.getParameters();
+                //isFlashOn = false;
+                //camera.stopPreview();
+                //params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                //camera.setParameters(params);
 
 
             }catch (RuntimeException e){
@@ -157,7 +168,7 @@ public class DriverActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        getCamera();
+       // getCamera();
     }
 
     @Override
